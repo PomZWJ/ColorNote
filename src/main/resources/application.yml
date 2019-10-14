@@ -1,0 +1,47 @@
+server:
+  port: 8020
+  servlet:
+    context-path: /${spring.application.name}
+    session:
+      timeout: 3600s
+  tomcat:
+    max-threads: 1000
+    max-connections: 20000
+spring:
+  application:
+    name: ColorNote
+  datasource:
+    druid:
+      url: jdbc:mysql://127.0.0.1:3306/ColorNote?characterEncoding=UTF-8&useUnicode=true
+      username: root
+      password: root
+      driver-class-name: com.mysql.jdbc.Driver
+      initial-size: 100
+      max-active: 1000
+      max-wait: 200
+      min-idle: 20
+      filter:
+        commons-log:
+          enabled: true
+      #间隔多久进行一次检测，检测需要关闭的空闲连接
+      time-between-eviction-runs-millis: 60000
+      remove-abandoned: true
+      validation-query: SELECT 1
+      removeAbandonedTimeout: 180
+    type: com.alibaba.druid.pool.DruidDataSource
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  servlet:
+    multipart:
+      max-file-size: 100Mb
+      max-request-size: 100Mb
+  redis:
+    lettuce:
+      pool:
+        min-idle: 50
+        max-idle: 500
+    host: 192.168.184.130
+    port: 6379
+    database: 0
+    timeout: 60s

@@ -2,6 +2,7 @@ package com.bluefatty;
 
 import com.bluefatty.exception.MessageCode;
 import lombok.extern.slf4j.Slf4j;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2019-10-14
  */
 @Slf4j
+@MapperScan(value = "com.bluefatty.dao")
 @RestController
 @SpringBootApplication
 public class ColorNoteApplication {

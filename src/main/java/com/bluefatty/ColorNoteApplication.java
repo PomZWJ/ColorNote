@@ -1,5 +1,7 @@
 package com.bluefatty;
 
+import com.bluefatty.exception.MessageCode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @github https://github.com/PomZWJ
  * @date 2019-10-14
  */
+@Slf4j
 @RestController
 @SpringBootApplication
 public class ColorNoteApplication {
@@ -21,8 +24,10 @@ public class ColorNoteApplication {
     public static void main(String[] args) {
         try {
             SpringApplication.run(ColorNoteApplication.class, args);
+            log.info("启动..{}", MessageCode.STARTUP_SUCCESS);
         }catch (Exception e){
             e.printStackTrace();
+            log.error("启动..{},原因={}",MessageCode.STARTUP_ERROR,e);
         }
     }
 
@@ -34,4 +39,6 @@ public class ColorNoteApplication {
     public String hello(){
         return "Successful startup";
     }
+
+
 }

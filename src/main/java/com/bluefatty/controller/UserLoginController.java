@@ -1,22 +1,25 @@
 package com.bluefatty.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.bluefatty.domain.Token;
 import com.bluefatty.domain.User;
+import com.bluefatty.service.UserService;
+import com.bluefatty.utils.DateUtils;
+import com.bluefatty.utils.Md5Utils;
 import com.bluefatty.utils.RedisUtils;
 import com.bluefatty.utils.RsaUtils;
-import com.bluefatty.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
  * 用户登录Controller
+ *
  * @author PomZWJ
  * @github https://github.com/PomZWJ
  * @date 2019-10-15
@@ -27,28 +30,48 @@ import java.util.concurrent.TimeUnit;
 public class UserLoginController {
     @Autowired
     private RedisUtils redisUtils;
-    @RequestMapping(value = "/login",method = RequestMethod.POST)
-    public String login(String userId,String password){
-        User user = new User();
-        user.setUserId(userId);
-        user.setPassword(password);
+    @Autowired
+    private UserService userService;
 
-        if(equals(userId)&&"111".equals(password)){
-            String token_user_id_1 = redisUtils.getCacheString("token_user_id_1");
-            System.out.println(token_user_id_1);
-            System.out.println("111");
-            if(!StringUtils.isEmpty(token_user_id_1)){
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String login(String userId, String password) {
+        User user = userService.selectByPrimaryKey(userId);
+        if (user != null) {
+            if (user.getPassword().equals(password)) {
+                user.setPassword(null);
+                Token token = new Token();
+                token.setCreateDate(DateUtils.getCurrentDate());
+                token.setCreateTime(DateUtils.getCurrentTime());
+                token.setUser(user);
+                token.setSign(Md5Utils.getMd5Str(JSON.toJSONString(user)));
+                String tokenStr = RsaUtils.rsaPublicEncrypt(JSON.toJSONString(token));
+                redisUtils.cacheString("token_user_" + userId, tokenStr, 3600, TimeUnit.SECONDS);
                 return "登录成功";
+            } else {
+                return "密码错误";
             }
-            Map<String,String> map = new HashMap<>(10);
-            map.put("id","1");
-            map.put("userName","zwj");
-            map.put("password","111");
-            String token = RsaUtils.rsaPublicEncrypt(JSON.toJSONString(map));
-            redisUtils.cacheString("token_user_id_1",token,3600, TimeUnit.SECONDS);
-            return "登录成功";
-        }else{
-            return "登录失败";
+        } else {
+            return "用户不存在";
         }
+    }
+
+    @RequestMapping(value = "/getCurrentLoginUserInfo", method = RequestMethod.POST)
+    public Object getCurrentLoginUserInfo(String userId, String token) {
+        String cacheString = redisUtils.getCacheString("token_user_" + userId);
+        if (cacheString.equals(token)) {
+            String tokenStr1 = RsaUtils.rsaPrivateKeyDecrypt(token);
+            String tokenStr2 = RsaUtils.rsaPrivateKeyDecrypt(cacheString);
+            Token token1 = JSON.toJavaObject((JSONObject) JSON.parse(tokenStr1), Token.class);
+            Token token2 = JSON.toJavaObject((JSONObject) JSON.parse(tokenStr2), Token.class);
+
+            if (!token1.getSign().equals(token2.getSign())) {
+                return "验签失败";
+            } else {
+                return tokenStr2;
+            }
+        } else {
+            return "token不存在";
+        }
+
     }
 }

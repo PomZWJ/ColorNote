@@ -1,5 +1,7 @@
 package com.bluefatty.domain;
 
+import lombok.Data;
+
 /**
  * Token
  *
@@ -7,6 +9,7 @@ package com.bluefatty.domain;
  * @github https://github.com/PomZWJ
  * @date 2019-10-15
  */
+@Data
 public class Token {
     /**
      * 签名

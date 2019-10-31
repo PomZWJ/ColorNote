@@ -18,7 +18,7 @@ public class Token {
     /**
      * 用户实体
      */
-    private User user;
+    private CnUser user;
     /**
      * 创建日期yyyyMMdd
      */

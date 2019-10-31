@@ -1,6 +1,6 @@
 package com.bluefatty.service;
 
-import com.bluefatty.domain.User;
+import com.bluefatty.domain.CnUser;
 
 /**
  * @author PomZWJ
@@ -20,33 +20,33 @@ public interface UserService {
      * @param record
      * @return
      */
-    int insert(User record);
+    int insert(CnUser record);
 
     /**
      * 选择性插入
      * @param record
      * @return
      */
-    int insertSelective(User record);
+    int insertSelective(CnUser record);
 
     /**
      * 根据主键查询
      * @param userId
      * @return
      */
-    User selectByPrimaryKey(String userId);
+    CnUser selectByPrimaryKey(String userId);
 
     /**
      * 选择性更新
      * @param record
      * @return
      */
-    int updateByPrimaryKeySelective(User record);
+    int updateByPrimaryKeySelective(CnUser record);
 
     /**
      * 根据主键更新
      * @param record
      * @return
      */
-    int updateByPrimaryKey(User record);
+    int updateByPrimaryKey(CnUser record);
 }

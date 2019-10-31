@@ -1,7 +1,7 @@
 package com.bluefatty.service.impl;
 
 import com.bluefatty.dao.UserMapper;
-import com.bluefatty.domain.User;
+import com.bluefatty.domain.CnUser;
 import com.bluefatty.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,27 +23,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int insert(User record) {
+    public int insert(CnUser record) {
         return userMapper.insert(record);
     }
 
     @Override
-    public int insertSelective(User record) {
+    public int insertSelective(CnUser record) {
         return userMapper.insertSelective(record);
     }
 
     @Override
-    public User selectByPrimaryKey(String userId) {
+    public CnUser selectByPrimaryKey(String userId) {
         return userMapper.selectByPrimaryKey(userId);
     }
 
     @Override
-    public int updateByPrimaryKeySelective(User record) {
+    public int updateByPrimaryKeySelective(CnUser record) {
         return userMapper.updateByPrimaryKeySelective(record);
     }
 
     @Override
-    public int updateByPrimaryKey(User record) {
+    public int updateByPrimaryKey(CnUser record) {
         return userMapper.updateByPrimaryKey(record);
     }
 }

@@ -3,6 +3,8 @@ server:
   tomcat:
     max-threads: 1000
     max-connections: 20000
+  servlet:
+    context-path: /${spring.application.name}
 spring:
   application:
     name: ColorNote

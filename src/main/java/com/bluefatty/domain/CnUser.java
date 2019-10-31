@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @date 2019-10-15
  */
 @Data
-public class User implements Serializable {
+public class CnUser implements Serializable {
     private String userId;
     private String userName;
     private String password;

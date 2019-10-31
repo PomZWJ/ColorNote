@@ -3,7 +3,7 @@ package com.bluefatty.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bluefatty.domain.Token;
-import com.bluefatty.domain.User;
+import com.bluefatty.domain.CnUser;
 import com.bluefatty.service.UserService;
 import com.bluefatty.utils.DateUtils;
 import com.bluefatty.utils.Md5Utils;
@@ -35,7 +35,7 @@ public class UserLoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(String userId, String password) {
-        User user = userService.selectByPrimaryKey(userId);
+        CnUser user = userService.selectByPrimaryKey(userId);
         if (user != null) {
             if (user.getPassword().equals(password)) {
                 user.setPassword(null);
@@ -72,6 +72,9 @@ public class UserLoginController {
         } else {
             return "token不存在";
         }
-
+    }
+    @RequestMapping(value = "/wxPubLogin",method = RequestMethod.POST)
+    public void wxPubLogin(){
+        return;
     }
 }

@@ -1,8 +1,8 @@
 package com.bluefatty.service.impl;
 
-import com.bluefatty.dao.UserMapper;
-import com.bluefatty.domain.CnUser;
-import com.bluefatty.service.UserService;
+import com.bluefatty.dao.TbUserMapper;
+import com.bluefatty.domain.TbUser;
+import com.bluefatty.service.TbUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,38 +12,38 @@ import org.springframework.stereotype.Service;
  * @date 2019-10-15
  */
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements TbUserService {
     @Autowired
-    private UserMapper userMapper;
+    private TbUserMapper tbUserMapper;
 
 
     @Override
     public int deleteByPrimaryKey(String userId) {
-        return userMapper.deleteByPrimaryKey(userId);
+        return tbUserMapper.deleteByPrimaryKey(userId);
     }
 
     @Override
-    public int insert(CnUser record) {
-        return userMapper.insert(record);
+    public int insert(TbUser record) {
+        return tbUserMapper.insert(record);
     }
 
     @Override
-    public int insertSelective(CnUser record) {
-        return userMapper.insertSelective(record);
+    public int insertSelective(TbUser record) {
+        return tbUserMapper.insertSelective(record);
     }
 
     @Override
-    public CnUser selectByPrimaryKey(String userId) {
-        return userMapper.selectByPrimaryKey(userId);
+    public TbUser selectByPrimaryKey(String userId) {
+        return tbUserMapper.selectByPrimaryKey(userId);
     }
 
     @Override
-    public int updateByPrimaryKeySelective(CnUser record) {
-        return userMapper.updateByPrimaryKeySelective(record);
+    public int updateByPrimaryKeySelective(TbUser record) {
+        return tbUserMapper.updateByPrimaryKeySelective(record);
     }
 
     @Override
-    public int updateByPrimaryKey(CnUser record) {
-        return userMapper.updateByPrimaryKey(record);
+    public int updateByPrimaryKey(TbUser record) {
+        return tbUserMapper.updateByPrimaryKey(record);
     }
 }

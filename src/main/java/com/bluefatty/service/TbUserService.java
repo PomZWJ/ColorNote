@@ -1,13 +1,13 @@
 package com.bluefatty.service;
 
-import com.bluefatty.domain.CnUser;
+import com.bluefatty.domain.TbUser;
 
 /**
  * @author PomZWJ
  * @github https://github.com/PomZWJ
  * @date 2019-10-15
  */
-public interface UserService {
+public interface TbUserService {
     /**
      * 根据主键删除
      * @param userId
@@ -20,33 +20,33 @@ public interface UserService {
      * @param record
      * @return
      */
-    int insert(CnUser record);
+    int insert(TbUser record);
 
     /**
      * 选择性插入
      * @param record
      * @return
      */
-    int insertSelective(CnUser record);
+    int insertSelective(TbUser record);
 
     /**
      * 根据主键查询
      * @param userId
      * @return
      */
-    CnUser selectByPrimaryKey(String userId);
+    TbUser selectByPrimaryKey(String userId);
 
     /**
      * 选择性更新
      * @param record
      * @return
      */
-    int updateByPrimaryKeySelective(CnUser record);
+    int updateByPrimaryKeySelective(TbUser record);
 
     /**
      * 根据主键更新
      * @param record
      * @return
      */
-    int updateByPrimaryKey(CnUser record);
+    int updateByPrimaryKey(TbUser record);
 }

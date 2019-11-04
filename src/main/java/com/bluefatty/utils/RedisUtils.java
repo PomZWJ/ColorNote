@@ -24,4 +24,7 @@ public class RedisUtils {
         Object value = this.redisTemplate.opsForValue().get(key);
         return StringUtils.getValue(value);
     }
+    public void deleteCache(String key){
+        this.redisTemplate.delete(key);
+    }
 }

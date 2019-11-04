@@ -9,6 +9,9 @@ package com.bluefatty.exception;
 public enum MessageCode {
 
     SUCCESS("000000","处理成功"),
+    ERROR_USERID_IS_NULL("000001","用户ID不能为空"),
+    ERROR_VERIFICATION_CODE_IS_NULL("000002","验证码不能为空"),
+    ERROR_UNKOWN("999999","未知错误"),
     STARTUP_SUCCESS("000001","启动成功"),
     STARTUP_ERROR("000002","启动失败");
     String code;

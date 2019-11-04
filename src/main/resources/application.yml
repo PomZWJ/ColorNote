@@ -39,6 +39,12 @@ spring:
     port: 6379
     database: 0
     password: 123456
+  #邮箱设置
+  mail:
+    host: smtp.qq.com
+    username: 1513041820@qq.com
+    password: 123456
+    subject: 彩色笔记验证码
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
   type-aliases-package: com.bluefatty.domain

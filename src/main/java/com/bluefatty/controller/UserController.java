@@ -12,7 +12,6 @@ import com.bluefatty.exception.ColorNoteException;
 import com.bluefatty.exception.MessageCode;
 import com.bluefatty.service.TbUserService;
 import com.bluefatty.utils.*;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +41,7 @@ public class UserController {
     @Autowired
     private EmailUtils emailUtils;
 
-    @RequestMapping(value = "sendVerificationCode", method = RequestMethod.POST)
+    @RequestMapping(value = "/sendVerificationCode", method = RequestMethod.POST)
     public ResponseParams<Boolean> sendVerificationCode(String userId) {
         ResponseParams<Boolean> responseParams = new ResponseParams<Boolean>();
         responseParams.setParams(true);

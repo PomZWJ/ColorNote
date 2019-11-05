@@ -1,11 +1,15 @@
-package com.bluefatty.dao;
+package com.bluefatty.service;
 
 import com.bluefatty.domain.TbNoteKind;
 
 import java.util.List;
 
-public interface TbNoteKindMapper {
-
+/**
+ * @author PomZWJ
+ * @github https://github.com/PomZWJ
+ * @date 2019-11-05
+ */
+public interface TbNoteKindService {
     int deleteByPrimaryKey(String noteKindId);
 
 

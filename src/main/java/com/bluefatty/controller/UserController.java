@@ -10,6 +10,7 @@ import com.bluefatty.domain.Token;
 import com.bluefatty.domain.TbUser;
 import com.bluefatty.exception.ColorNoteException;
 import com.bluefatty.exception.MessageCode;
+import com.bluefatty.facade.NoteKindFacade;
 import com.bluefatty.service.TbUserService;
 import com.bluefatty.utils.*;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,8 @@ public class UserController {
     private TbUserService tbUserService;
     @Autowired
     private EmailUtils emailUtils;
+    @Autowired
+    private NoteKindFacade noteKindFacade;
 
     @RequestMapping(value = "/sendVerificationCode", method = RequestMethod.POST)
     public ResponseParams<Boolean> sendVerificationCode(String userId) {

@@ -103,4 +103,16 @@
       kind_icon_url = #{kindIconUrl,jdbcType=VARCHAR}
     where note_kind_id = #{noteKindId,jdbcType=VARCHAR}
   </update>
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into tb_note_kind (note_kind_id,user_id, note_kind_name , create_date , create_time , kind_icon_url)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.noteKindId},
+      #{item.userId},
+      #{item.noteKindName},
+      #{item.createDate},
+      #{item.createTime},
+      #{item.kindIconUrl})
+    </foreach>
+  </insert>
 </mapper>

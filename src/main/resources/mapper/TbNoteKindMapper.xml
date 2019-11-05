@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bluefatty.dao.TbNoteKindMapper">
+  <resultMap id="BaseResultMap" type="com.bluefatty.domain.TbNoteKind">
+    <id column="note_kind_id" jdbcType="VARCHAR" property="noteKindId" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="note_kind_name" jdbcType="VARCHAR" property="noteKindName" />
+    <result column="create_date" jdbcType="CHAR" property="createDate" />
+    <result column="create_time" jdbcType="CHAR" property="createTime" />
+    <result column="kind_icon_url" jdbcType="VARCHAR" property="kindIconUrl" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    note_kind_id, user_id, note_kind_name, create_date, create_time, kind_icon_url
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_note_kind
+    where note_kind_id = #{noteKindId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tb_note_kind
+    where note_kind_id = #{noteKindId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bluefatty.domain.TbNoteKind">
+    insert into tb_note_kind (note_kind_id, user_id, note_kind_name, 
+      create_date, create_time, kind_icon_url
+      )
+    values (#{noteKindId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{noteKindName,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=CHAR}, #{createTime,jdbcType=CHAR}, #{kindIconUrl,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bluefatty.domain.TbNoteKind">
+    insert into tb_note_kind
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="noteKindId != null and noteKindId != ''">
+        note_kind_id,
+      </if>
+      <if test="userId != null and userId != ''">
+        user_id,
+      </if>
+      <if test="noteKindName != null and noteKindName != ''">
+        note_kind_name,
+      </if>
+      <if test="createDate != null and createDate != ''">
+        create_date,
+      </if>
+      <if test="createTime != null and createTime != ''">
+        create_time,
+      </if>
+      <if test="kindIconUrl != null and kindIconUrl != ''">
+        kind_icon_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="noteKindId != null and noteKindId != ''">
+        #{noteKindId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null and userId != ''">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="noteKindName != null and noteKindName != ''">
+        #{noteKindName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null and createDate != ''">
+        #{createDate,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null and createTime != ''">
+        #{createTime,jdbcType=CHAR},
+      </if>
+      <if test="kindIconUrl != null and kindIconUrl != ''">
+        #{kindIconUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bluefatty.domain.TbNoteKind">
+    update tb_note_kind
+    <set>
+      <if test="userId != null and userId != ''">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="noteKindName != null and noteKindName != ''">
+        note_kind_name = #{noteKindName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null and createDate != ''">
+        create_date = #{createDate,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null and createTime != ''">
+        create_time = #{createTime,jdbcType=CHAR},
+      </if>
+      <if test="kindIconUrl != null and kindIconUrl != ''">
+        kind_icon_url = #{kindIconUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where note_kind_id = #{noteKindId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bluefatty.domain.TbNoteKind">
+    update tb_note_kind
+    set user_id = #{userId,jdbcType=VARCHAR},
+      note_kind_name = #{noteKindName,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=CHAR},
+      create_time = #{createTime,jdbcType=CHAR},
+      kind_icon_url = #{kindIconUrl,jdbcType=VARCHAR}
+    where note_kind_id = #{noteKindId,jdbcType=VARCHAR}
+  </update>
+</mapper>

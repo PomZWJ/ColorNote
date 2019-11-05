@@ -21,11 +21,12 @@ public class EmailUtils {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public void sendEmail(String to){
+    public void sendEmail(String to,String code){
         SimpleMailMessage smm = new SimpleMailMessage();
-        smm.setTo("912094062@qq.com");
+        smm.setFrom(from);
+        smm.setTo(to);
         smm.setSubject(subject);
-        smm.setText("123456");
+        smm.setText(code);
         javaMailSender.send(smm);
     }
 }

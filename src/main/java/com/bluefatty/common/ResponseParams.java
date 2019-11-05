@@ -1,5 +1,6 @@
 package com.bluefatty.common;
 
+import com.bluefatty.exception.MessageCode;
 import com.bluefatty.utils.DateUtils;
 import com.bluefatty.utils.StringUtils;
 
@@ -45,6 +46,9 @@ public class ResponseParams<T> implements Serializable {
     private Map<String, Object> extenalParams;
 
     public String getResultCode() {
+        if(StringUtils.isEmpty(resultCode)){
+            resultCode = MessageCode.SUCCESS.getCode();
+        }
         return resultCode;
     }
 
@@ -53,6 +57,9 @@ public class ResponseParams<T> implements Serializable {
     }
 
     public String getResultMsg() {
+        if(StringUtils.isEmpty(resultMsg)){
+            resultMsg = MessageCode.SUCCESS.getMsg();
+        }
         return resultMsg;
     }
 

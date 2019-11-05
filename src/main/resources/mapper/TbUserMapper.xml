@@ -25,48 +25,48 @@
   <insert id="insert" parameterType="com.bluefatty.domain.TbUser">
     insert into tb_user (user_id, user_name,create_date, create_time, icon_url, account_status)
     values (#{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
-      #{createDate,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{accountStatus,jdbcType=VARCHAR}
+      #{createDate,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR},#{iconUrl,jdbcType=VARCHAR}, #{accountStatus,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.bluefatty.domain.TbUser">
     insert into tb_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="userId != null">
+      <if test="userId != null and userId != ''">
         user_id,
       </if>
-      <if test="userName != null">
+      <if test="userName != null and userName != ''">
         user_name,
       </if>
-      <if test="createDate != null">
+      <if test="createDate != null and createDate != ''">
         create_date,
       </if>
-      <if test="createTime != null">
+      <if test="createTime != null and createTime != ''">
         create_time,
       </if>
-      <if test="iconUrl != null">
+      <if test="iconUrl != null and iconUrl != ''">
         icon_url,
       </if>
-      <if test="accountStatus != null">
+      <if test="accountStatus != null and accountStatus != ''">
         account_status,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="userId != null">
+      <if test="userId != null and userId != ''">
         #{userId,jdbcType=VARCHAR},
       </if>
-      <if test="userName != null">
+      <if test="userName != null and userName != ''">
         #{userName,jdbcType=VARCHAR},
       </if>
-      <if test="createDate != null">
+      <if test="createDate != null and createDate != ''">
         #{createDate,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
+      <if test="createTime != null and createTime != ''">
         #{createTime,jdbcType=VARCHAR},
       </if>
-      <if test="iconUrl != null">
+      <if test="iconUrl != null and iconUrl != ''">
         #{iconUrl,jdbcType=VARCHAR},
       </if>
-      <if test="accountStatus != null">
+      <if test="accountStatus != null and accountStatus != ''">
         #{accountStatus,jdbcType=VARCHAR},
       </if>
     </trim>
@@ -74,19 +74,19 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.bluefatty.domain.TbUser">
     update tb_user
     <set>
-      <if test="userName != null">
+      <if test="userName != null and userName != ''">
         user_name = #{userName,jdbcType=VARCHAR},
       </if>
-      <if test="createDate != null">
+      <if test="createDate != null and createDate != ''">
         create_date = #{createDate,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
+      <if test="createTime != null and createTime != ''">
         create_time = #{createTime,jdbcType=VARCHAR},
       </if>
-      <if test="iconUrl != null">
+      <if test="iconUrl != null and iconUrl != ''">
         icon_url = #{iconUrl,jdbcType=VARCHAR},
       </if>
-      <if test="accountStatus != null">
+      <if test="accountStatus != null and accountStatus != ''">
         account_status = #{accountStatus,jdbcType=VARCHAR},
       </if>
     </set>

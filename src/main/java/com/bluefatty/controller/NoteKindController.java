@@ -1,7 +1,10 @@
 package com.bluefatty.controller;
 
+import com.bluefatty.runner.TbSystemConfigConfigRunner;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -14,4 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/noteKind")
 public class NoteKindController {
+
+    @Autowired
+    private TbSystemConfigConfigRunner tbSystemConfigConfigRunner;
+
+    @RequestMapping(value = "/get" , method = RequestMethod.POST)
+    public String get(){
+        String imageUrl = tbSystemConfigConfigRunner.getConfigValue("imageUrl");
+        return imageUrl;
+    }
 }

@@ -18,4 +18,9 @@ public class TbNoteKind {
     private String createTime;
     private String kindIconUrl;
 
+    /**
+     * 笔记数量
+     */
+    private Integer noteNum;
+
 }

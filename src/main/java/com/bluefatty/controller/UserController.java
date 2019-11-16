@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -31,6 +32,12 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
+    /**
+     * 发送用户验证码
+     *
+     * @param userId
+     * @return
+     */
     @RequestMapping(value = "/sendVerificationCode", method = RequestMethod.POST)
     public ResponseParams<Boolean> sendVerificationCode(String userId) {
         ResponseParams<Boolean> responseParams = new ResponseParams<Boolean>();
@@ -59,6 +66,13 @@ public class UserController {
         return responseParams;
     }
 
+    /**
+     * 用户登录，如果数据库中没有用户记录，则自动开户
+     *
+     * @param userId
+     * @param verificationCode
+     * @return
+     */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseParams login(String userId, String verificationCode) {
         ResponseParams<Map> responseParams = new ResponseParams<Map>();
@@ -90,21 +104,66 @@ public class UserController {
         return responseParams;
     }
 
+    /**
+     * 获取用户信息
+     *
+     * @param userId
+     * @param token
+     * @return
+     */
     @RequestMapping(value = "/getCurrentLoginUserInfo", method = RequestMethod.POST)
     public ResponseParams getCurrentLoginUserInfo(String userId, String token) {
         ResponseParams<Token> responseParams = new ResponseParams<Token>();
         String desc = "用户信息获取";
-        log.info("desc = {},userId={},token={}",desc,userId,token);
-        try{
-            if(StringUtils.isEmpty(userId)){
-                throw new ColorNoteException(MessageCode.ERROR_USERID_IS_NULL.getCode(),MessageCode.ERROR_USERID_IS_NULL.getMsg());
+        log.info("desc = {},userId={},token={}", desc, userId, token);
+        try {
+            if (StringUtils.isEmpty(userId)) {
+                throw new ColorNoteException(MessageCode.ERROR_USERID_IS_NULL.getCode(), MessageCode.ERROR_USERID_IS_NULL.getMsg());
             }
-            if(StringUtils.isEmpty(token)){
-                throw new ColorNoteException(MessageCode.ERROR_TOKEN_IS_NULL.getCode(),MessageCode.ERROR_TOKEN_IS_NULL.getMsg());
+            if (StringUtils.isEmpty(token)) {
+                throw new ColorNoteException(MessageCode.ERROR_TOKEN_IS_NULL.getCode(), MessageCode.ERROR_TOKEN_IS_NULL.getMsg());
             }
             Token currentLoginUserInfo = userService.getCurrentLoginUserInfo(userId, token);
             responseParams.setParams(currentLoginUserInfo);
-        }catch (Exception e){
+        } catch (Exception e) {
+            log.error("desc={},获取失败, 原因:{}", desc, e);
+            //清空赋值
+            responseParams.setParams(null);
+            if (e instanceof ColorNoteException) {
+                ColorNoteException ce = (ColorNoteException) e;
+                responseParams.setResultCode(ce.getErrorCode());
+                responseParams.setResultMsg(ce.getErrorMessage());
+            } else {
+                responseParams.setResultCode(MessageCode.ERROR_UNKOWN.getCode());
+                responseParams.setResultMsg(MessageCode.ERROR_UNKOWN.getMsg() + "," + e.getMessage());
+            }
+        }
+        log.info("desc = {} , 出参 = {} ", desc, JSON.toJSONString(responseParams));
+        return responseParams;
+    }
+
+    /**
+     * 获取用户主页信息
+     *
+     * @param userId
+     * @param token
+     * @return
+     */
+    @RequestMapping(value = "/getUserIndexInfo", method = RequestMethod.POST)
+    public ResponseParams getUserIndexInfo(String userId, String token) {
+        ResponseParams<Map> responseParams = new ResponseParams<Map>();
+        String desc = "获取用户主页信息";
+        log.info("desc = {},userId={},token={}", desc, userId, token);
+        try {
+            if (StringUtils.isEmpty(userId)) {
+                throw new ColorNoteException(MessageCode.ERROR_USERID_IS_NULL.getCode(), MessageCode.ERROR_USERID_IS_NULL.getMsg());
+            }
+            /*if (StringUtils.isEmpty(token)) {
+                throw new ColorNoteException(MessageCode.ERROR_TOKEN_IS_NULL.getCode(), MessageCode.ERROR_TOKEN_IS_NULL.getMsg());
+            }*/
+            Map<String, Object> returnMap = userService.getUserIndexInfo(userId);
+            responseParams.setParams(returnMap);
+        } catch (Exception e) {
             log.error("desc={},获取失败, 原因:{}", desc, e);
             //清空赋值
             responseParams.setParams(null);

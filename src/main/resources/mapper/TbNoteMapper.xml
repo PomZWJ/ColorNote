@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bluefatty.dao.TbNoteMapper">
+  <resultMap id="BaseResultMap" type="com.bluefatty.domain.TbNote">
+    <id column="note_id" jdbcType="VARCHAR" property="noteId" />
+    <result column="note_kind_id" jdbcType="VARCHAR" property="noteKindId" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="is_fav" jdbcType="VARCHAR" property="isFav" />
+    <result column="is_delete" jdbcType="VARCHAR" property="isDelete" />
+    <result column="delete_date" jdbcType="CHAR" property="deleteDate" />
+    <result column="note_time" jdbcType="VARCHAR" property="noteTime" />
+    <result column="create_time" jdbcType="CHAR" property="createTime" />
+    <result column="create_date" jdbcType="CHAR" property="createDate" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.bluefatty.domain.TbNote">
+    <result column="note_content" jdbcType="LONGVARCHAR" property="noteContent" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    note_id, note_kind_id, user_id, is_fav, is_delete, delete_date, note_time, create_time, 
+    create_date
+  </sql>
+  <sql id="Blob_Column_List">
+    note_content
+  </sql>
+  <select id="statisticsNumberBySelective" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select count(note_id)
+    from tb_note
+    <where>
+      1=1
+      <if test="noteId != null and noteId != ''">
+        and note_id = #{noteId}
+      </if>
+      <if test="noteKindId != null and noteKindId != ''">
+        and note_kind_id = #{noteKindId}
+      </if>
+      <if test="userId != null and userId != ''">
+        and user_id = #{userId}
+      </if>
+      <if test="isFav != null and isFav != ''">
+        and is_fav = #{isFav}
+      </if>
+      <if test="isDelete != null and isDelete != ''">
+        and is_delete = #{isDelete}
+      </if>
+      <if test="deleteDate != null and deleteDate != ''">
+        and delete_date = #{deleteDate}
+      </if>
+      <if test="noteTime != null and noteTime != ''">
+        and note_time = #{noteTime}
+      </if>
+      <if test="createTime != null and createTime != ''">
+        and create_time = #{createTime}
+      </if>
+      <if test="createDate != null and createDate != ''">
+        and create_date = #{createDate}
+      </if>
+      <if test="noteContent != null and noteContent != ''">
+        and note_content = #{noteContent}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectBySelective" parameterType="java.util.Map" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_note
+    <where>
+      1=1
+      <if test="noteId != null and noteId != ''">
+        and note_id = #{noteId}
+      </if>
+      <if test="noteKindId != null and noteKindId != ''">
+        and note_kind_id = #{noteKindId}
+      </if>
+      <if test="userId != null and userId != ''">
+        and user_id = #{userId}
+      </if>
+      <if test="isFav != null and isFav != ''">
+        and is_fav = #{isFav}
+      </if>
+      <if test="isDelete != null and isDelete != ''">
+        and is_delete = #{isDelete}
+      </if>
+      <if test="deleteDate != null and deleteDate != ''">
+        and delete_date = #{deleteDate}
+      </if>
+      <if test="noteTime != null and noteTime != ''">
+        and note_time = #{noteTime}
+      </if>
+      <if test="createTime != null and createTime != ''">
+        and create_time = #{createTime}
+      </if>
+      <if test="createDate != null and createDate != ''">
+        and create_date = #{createDate}
+      </if>
+      <if test="noteContent != null and noteContent != ''">
+        and note_content = #{noteContent}
+      </if>
+    </where>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_note
+    where note_id = #{noteId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tb_note
+    where note_id = #{noteId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bluefatty.domain.TbNote">
+    insert into tb_note (note_id, note_kind_id, user_id, 
+      is_fav, is_delete, delete_date, 
+      note_time, create_time, create_date, 
+      note_content)
+    values (#{noteId,jdbcType=VARCHAR}, #{noteKindId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
+      #{isFav,jdbcType=VARCHAR}, #{isDelete,jdbcType=VARCHAR}, #{deleteDate,jdbcType=CHAR}, 
+      #{noteTime,jdbcType=VARCHAR}, #{createTime,jdbcType=CHAR}, #{createDate,jdbcType=CHAR}, 
+      #{noteContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bluefatty.domain.TbNote">
+    insert into tb_note
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="noteId != null and noteId != ''">
+        note_id,
+      </if>
+      <if test="noteKindId != null and noteKindId != ''">
+        note_kind_id,
+      </if>
+      <if test="userId != null and userId != ''">
+        user_id,
+      </if>
+      <if test="isFav != null and isFav != ''">
+        is_fav,
+      </if>
+      <if test="isDelete != null and isDelete != ''">
+        is_delete,
+      </if>
+      <if test="deleteDate != null and deleteDate != ''">
+        delete_date,
+      </if>
+      <if test="noteTime != null and noteTime != ''">
+        note_time,
+      </if>
+      <if test="createTime != null and createTime != ''">
+        create_time,
+      </if>
+      <if test="createDate != null and createDate != ''">
+        create_date,
+      </if>
+      <if test="noteContent != null and noteContent != ''">
+        note_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="noteId != null">
+        #{noteId,jdbcType=VARCHAR},
+      </if>
+      <if test="noteKindId != null and noteKindId != ''">
+        #{noteKindId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null and userId != ''">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="isFav != null and isFav != ''">
+        #{isFav,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null and isDelete != ''">
+        #{isDelete,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteDate != null and deleteDate != ''">
+        #{deleteDate,jdbcType=CHAR},
+      </if>
+      <if test="noteTime != null and noteTime != ''">
+        #{noteTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null and createTime != ''">
+        #{createTime,jdbcType=CHAR},
+      </if>
+      <if test="createDate != null and createDate != ''">
+        #{createDate,jdbcType=CHAR},
+      </if>
+      <if test="noteContent != null and noteContent != ''">
+        #{noteContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bluefatty.domain.TbNote">
+    update tb_note
+    <set>
+      <if test="noteKindId != null and noteKindId != ''">
+        note_kind_id = #{noteKindId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null and userId != ''">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="isFav != null and isFav != ''">
+        is_fav = #{isFav,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null and isDelete != ''">
+        is_delete = #{isDelete,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteDate != null and deleteDate != ''">
+        delete_date = #{deleteDate,jdbcType=CHAR},
+      </if>
+      <if test="noteTime != null and noteTime != ''">
+        note_time = #{noteTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null and createTime != ''">
+        create_time = #{createTime,jdbcType=CHAR},
+      </if>
+      <if test="createDate != null and createDate != ''">
+        create_date = #{createDate,jdbcType=CHAR},
+      </if>
+      <if test="noteContent != null and noteContent != ''">
+        note_content = #{noteContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where note_id = #{noteId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bluefatty.domain.TbNote">
+    update tb_note
+    set note_kind_id = #{noteKindId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      is_fav = #{isFav,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=VARCHAR},
+      delete_date = #{deleteDate,jdbcType=CHAR},
+      note_time = #{noteTime,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=CHAR},
+      create_date = #{createDate,jdbcType=CHAR},
+      note_content = #{noteContent,jdbcType=LONGVARCHAR}
+    where note_id = #{noteId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bluefatty.domain.TbNote">
+    update tb_note
+    set note_kind_id = #{noteKindId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      is_fav = #{isFav,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=VARCHAR},
+      delete_date = #{deleteDate,jdbcType=CHAR},
+      note_time = #{noteTime,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=CHAR},
+      create_date = #{createDate,jdbcType=CHAR}
+    where note_id = #{noteId,jdbcType=VARCHAR}
+  </update>
+</mapper>

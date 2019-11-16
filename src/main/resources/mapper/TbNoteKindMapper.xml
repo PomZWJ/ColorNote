@@ -12,6 +12,12 @@
   <sql id="Base_Column_List">
     note_kind_id, user_id, note_kind_name, create_date, create_time, kind_icon_url
   </sql>
+  <select id="selectAscByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    note_kind_id,note_kind_name,kind_icon_url
+    from tb_note_kind t
+    where t.user_id = #{userId,jdbcType=VARCHAR} order by CONCAT(t.create_date,t.create_time) asc
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

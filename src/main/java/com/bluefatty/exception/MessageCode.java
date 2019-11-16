@@ -16,6 +16,7 @@ public enum MessageCode {
     ERROR_TOKEN_IS_NOT_OK("000005","Token不正确"),
     ERROR_CHECK_SIGN("000006","Token不正确"),
     ERROR_TOKEN_IS_NULL("000007","Token为空"),
+    ERROR_VERIFICATION_CODE_IS_NOT_OK("000008","验证码不正确,请重试"),
     ERROR_UNKOWN("999999","未知错误"),
     STARTUP_SUCCESS("000001","启动成功"),
     STARTUP_ERROR("000002","启动失败");

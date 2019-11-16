@@ -24,4 +24,6 @@ public interface TbNoteKindMapper {
     int updateByPrimaryKey(TbNoteKind record);
 
     int batchInsert(List<TbNoteKind> list);
+
+    List<TbNoteKind>selectAscByUserId(String userId);
 }

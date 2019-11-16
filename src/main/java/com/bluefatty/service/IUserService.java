@@ -32,4 +32,11 @@ public interface IUserService {
      * @return
      */
     Token getCurrentLoginUserInfo(String userId, String token);
+
+    /**
+     * 获取用户主页信息
+     * @param userId
+     * @return
+     */
+    Map getUserIndexInfo(String userId);
 }

@@ -53,4 +53,15 @@ public class DateUtils {
         String dateChar = sim.format(date);
         return dateChar;
     }
+
+    /**
+     * 从日期得到时间
+     * @param date
+     * @return
+     */
+    public static String getTimeByDate(Date date) {
+        SimpleDateFormat sim = new SimpleDateFormat("HHmmss");
+        String dateChar = sim.format(date);
+        return dateChar;
+    }
 }

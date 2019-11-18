@@ -14,4 +14,6 @@ public interface INoteService {
      * @return
      */
     List getAllNoteInfo(String userId);
+
+    void addUserNoteInfo(String userId,String noteKindId,String noteContent,String noteTime);
 }

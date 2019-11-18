@@ -2,54 +2,41 @@ package com.bluefatty.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.bluefatty.common.ResponseParams;
-import com.bluefatty.dao.TbNoteKindMapper;
-import com.bluefatty.domain.TbNoteKind;
-import com.bluefatty.domain.Token;
 import com.bluefatty.exception.ColorNoteException;
 import com.bluefatty.exception.MessageCode;
-import com.bluefatty.service.INoteKindService;
+import com.bluefatty.utils.DateUtils;
 import com.bluefatty.utils.StringUtils;
-import com.bluefatty.utils.SystemConfigUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
  * 笔记分类管理
  * @author PomZWJ
  * @github https://github.com/PomZWJ
- * @date 2019-11-05
+ * @date 2019-11-18
  */
 @Slf4j
 @RestController
-@RequestMapping(value = "/noteKind")
-public class NoteKindController {
-
-    @Autowired
-    private INoteKindService noteKindService;
-
-
+@RequestMapping(value = "/common")
+public class CommonController {
     /**
-     * 获取当前用户所有的笔记分类
+     * 获取添加页面的时间
      *
-     * @param userId
      * @return
      */
-    @RequestMapping(value = "/getAllNoteKindByUserId", method = RequestMethod.POST)
-    public ResponseParams getAllNoteKindByUserId(String userId) {
-        ResponseParams<List> responseParams = new ResponseParams<List>();
-        String desc = "获取用户笔记分类";
-        log.info("desc = {},userId={}", desc, userId);
+    @RequestMapping(value = "/getSystemCurrentTime", method = RequestMethod.POST)
+    public ResponseParams getSystemCurrentTime() {
+        ResponseParams<String> responseParams = new ResponseParams<String>();
+        String desc = "获取添加页面的时间";
         try {
-            if (StringUtils.isEmpty(userId)) {
-                throw new ColorNoteException(MessageCode.ERROR_USERID_IS_NULL.getCode(), MessageCode.ERROR_USERID_IS_NULL.getMsg());
-            }
-            List noteKindList = noteKindService.getAllNoteKindByUserId(userId);
-            responseParams.setParams(noteKindList);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            responseParams.setParams(sdf.format(new Date()));
         } catch (Exception e) {
             log.error("desc={},获取失败, 原因:{}", desc, e);
             //清空赋值
@@ -63,9 +50,9 @@ public class NoteKindController {
                 responseParams.setResultMsg(MessageCode.ERROR_UNKOWN.getMsg() + "," + e.getMessage());
             }
         }
-        log.info("desc = {} , 出参 = {} ", desc, JSON.toJSONString(responseParams));
         return responseParams;
     }
+
 
 
 }

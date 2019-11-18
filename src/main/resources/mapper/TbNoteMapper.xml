@@ -99,6 +99,7 @@
         and note_content = #{noteContent}
       </if>
     </where>
+    order by CONCAT(create_date,create_time) desc
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
     select 

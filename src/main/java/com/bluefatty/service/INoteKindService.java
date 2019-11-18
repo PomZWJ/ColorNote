@@ -10,5 +10,5 @@ import java.util.List;
  * @date 2019-11-12
  */
 public interface INoteKindService {
-
+    List getAllNoteKindByUserId(String userId);
 }

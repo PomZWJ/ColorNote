@@ -67,5 +67,45 @@ public class NoteKindController {
         return responseParams;
     }
 
+    /**
+     * 更新笔记分类(包含添加)
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/updateNoteKind", method = RequestMethod.POST)
+    public ResponseParams updateNoteKind(String userId,String noteKindName,String noteKindUrl) {
+        ResponseParams<Boolean> responseParams = new ResponseParams<Boolean>();
+        String desc = "更新笔记分类(包含添加)";
+        log.info("desc = {},userId={},noteKindName={},noteKindUrl={}", desc, userId,noteKindName,noteKindUrl);
+        try {
+            if (StringUtils.isEmpty(userId)) {
+                throw new ColorNoteException(MessageCode.ERROR_USERID_IS_NULL.getCode(), MessageCode.ERROR_USERID_IS_NULL.getMsg());
+            }
+            if (StringUtils.isEmpty(noteKindName)) {
+                throw new ColorNoteException(MessageCode.ERROR_NOTE_KIND_NAME_IS_NULL.getCode(), MessageCode.ERROR_NOTE_KIND_NAME_IS_NULL.getMsg());
+            }
+            if (StringUtils.isEmpty(noteKindUrl)) {
+                throw new ColorNoteException(MessageCode.ERROR_NOTE_KIND_URL_IS_NULL.getCode(), MessageCode.ERROR_NOTE_KIND_URL_IS_NULL.getMsg());
+            }
+            noteKindService.updateNoteKind(userId,noteKindName,noteKindUrl);
+            responseParams.setParams(true);
+        } catch (Exception e) {
+            log.error("desc={},获取失败, 原因:{}", desc, e);
+            //清空赋值
+            responseParams.setParams(null);
+            if (e instanceof ColorNoteException) {
+                ColorNoteException ce = (ColorNoteException) e;
+                responseParams.setResultCode(ce.getErrorCode());
+                responseParams.setResultMsg(ce.getErrorMessage());
+            } else {
+                responseParams.setResultCode(MessageCode.ERROR_UNKOWN.getCode());
+                responseParams.setResultMsg(MessageCode.ERROR_UNKOWN.getMsg() + "," + e.getMessage());
+            }
+        }
+        log.info("desc = {} , 出参 = {} ", desc, JSON.toJSONString(responseParams));
+        return responseParams;
+    }
+
 
 }

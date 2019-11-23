@@ -40,4 +40,13 @@ public interface TbNoteMapper {
      * @return
      */
     List<TbNote> selectBySelective(Map map);
+
+    TbNote selectOneByUserIdAndNoteId(Map map);
+
+    /**
+     * 统计未分类的笔记数量
+     * @param map
+     * @return
+     */
+    Integer statisticsNoNoteKindNumber(Map map);
 }

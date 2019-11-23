@@ -22,6 +22,37 @@
   <sql id="Blob_Column_List">
     note_content
   </sql>
+  <select id="statisticsNoNoteKindNumber" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(note_id)
+        from tb_note where note_kind_id is null
+        <if test="noteId != null and noteId != ''">
+          and note_id = #{noteId}
+        </if>
+        <if test="userId != null and userId != ''">
+          and user_id = #{userId}
+        </if>
+        <if test="isFav != null and isFav != ''">
+          and is_fav = #{isFav}
+        </if>
+        <if test="isDelete != null and isDelete != ''">
+          and is_delete = #{isDelete}
+        </if>
+        <if test="deleteDate != null and deleteDate != ''">
+          and delete_date = #{deleteDate}
+        </if>
+        <if test="noteTime != null and noteTime != ''">
+          and note_time = #{noteTime}
+        </if>
+        <if test="createTime != null and createTime != ''">
+          and create_time = #{createTime}
+        </if>
+        <if test="createDate != null and createDate != ''">
+          and create_date = #{createDate}
+        </if>
+        <if test="noteContent != null and noteContent != ''">
+          and note_content = #{noteContent}
+        </if>
+  </select>
   <select id="statisticsNumberBySelective" parameterType="java.util.Map" resultType="java.lang.Integer">
     select count(note_id)
     from tb_note
@@ -59,7 +90,6 @@
       </if>
     </where>
   </select>
-
   <select id="selectBySelective" parameterType="java.util.Map" resultMap="ResultMapWithBLOBs">
     select
     <include refid="Base_Column_List" />
@@ -97,6 +127,27 @@
       </if>
       <if test="noteContent != null and noteContent != ''">
         and note_content = #{noteContent}
+      </if>
+    </where>
+    order by CONCAT(create_date,create_time) desc
+  </select>
+
+  <select id="selectOneByUserIdAndNoteId" parameterType="java.util.Map" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_note
+    <where>
+      1=1
+      <if test="noteId != null and noteId != ''">
+        and note_id = #{noteId}
+      </if>
+      <if test="userId != null and userId != ''">
+        and user_id = #{userId}
+      </if>
+      <if test="isDelete != null and isDelete != ''">
+        and is_delete = #{isDelete}
       </if>
     </where>
     order by CONCAT(create_date,create_time) desc

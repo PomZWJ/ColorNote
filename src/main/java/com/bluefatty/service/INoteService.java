@@ -1,6 +1,8 @@
 package com.bluefatty.service;
 
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author PomZWJ
@@ -16,4 +18,12 @@ public interface INoteService {
     List getAllNoteInfo(String userId);
 
     void addUserNoteInfo(String userId,String noteKindId,String noteContent,String noteTime);
+
+    Map getUserNoteByUserId(String userId, String noteId);
+
+    void updateNoteFavState(String userId,String noteId,String favState);
+
+    void deleteNoteToRubbishByUserIdAndNoteId(String userId, String noteId);
+
+    void updateUserNoteInfo(String userId,String noteId,String noteKindId,String noteContent,String noteTime);
 }

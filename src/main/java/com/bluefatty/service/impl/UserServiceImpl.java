@@ -158,7 +158,7 @@ public class UserServiceImpl implements IUserService {
             tnkList.add(temp);
         }
         //所有笔记
-        dbQueryParams.put("noteKindId","");
+        dbQueryParams.put("noteKindId",null);
         Integer allNoteNum = tbNoteMapper.statisticsNumberBySelective(dbQueryParams);
         //我的收藏
         dbQueryParams.put("isFav", FavoriteFiled.FAV);
@@ -167,6 +167,13 @@ public class UserServiceImpl implements IUserService {
         dbQueryParams.clear();
         dbQueryParams.put("isDelete", NoteStatusFiled.RUBBISH);
         Integer rubbishNoteNum = tbNoteMapper.statisticsNumberBySelective(dbQueryParams);
+
+        //获取未分类的笔记数量
+        dbQueryParams.clear();
+        dbQueryParams.put("userId",userId);
+        dbQueryParams.put("isDelete", NoteStatusFiled.NO_DELETE);
+        Integer noNoteKindNumber = tbNoteMapper.statisticsNoNoteKindNumber(dbQueryParams);
+
         //设置返回值
         Map<String, Object> returnMap = new HashMap<>(4);
         returnMap.put("noteKind", tnkList);
@@ -174,6 +181,7 @@ public class UserServiceImpl implements IUserService {
         returnMap.put("allNote", allNoteNum);
         returnMap.put("myFav", favNoteNum);
         returnMap.put("nearDel", rubbishNoteNum);
+        returnMap.put("noNoteKindNumber",noNoteKindNumber);
         return returnMap;
     }
 }

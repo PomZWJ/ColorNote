@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.bluefatty.dao.TbNoteKindMapper;
 import com.bluefatty.domain.TbNoteKind;
 import com.bluefatty.service.INoteKindService;
+import com.bluefatty.utils.CommonUtils;
+import com.bluefatty.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,5 +55,17 @@ public class NoteKindServiceImpl implements INoteKindService {
             tnkList.add(temp);
         }
         return tnkList;
+    }
+
+    @Override
+    public void updateNoteKind(String userId,String noteKindName,String noteKindUrl) {
+        TbNoteKind tbNoteKind = new TbNoteKind();
+        tbNoteKind.setCreateDate(DateUtils.getCurrentDate());
+        tbNoteKind.setCreateTime(DateUtils.getCurrentTime());
+        tbNoteKind.setKindIconUrl(noteKindUrl);
+        tbNoteKind.setNoteKindName(noteKindName);
+        tbNoteKind.setUserId(userId);
+        tbNoteKind.setNoteKindId(CommonUtils.getUuid());
+        tbNoteKindMapper.insertSelective(tbNoteKind);
     }
 }

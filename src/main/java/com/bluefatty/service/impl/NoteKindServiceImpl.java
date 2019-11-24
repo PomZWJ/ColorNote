@@ -2,6 +2,8 @@ package com.bluefatty.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bluefatty.dao.TbNoteKindMapper;
+import com.bluefatty.dao.TbNoteMapper;
+import com.bluefatty.domain.TbNote;
 import com.bluefatty.domain.TbNoteKind;
 import com.bluefatty.service.INoteKindService;
 import com.bluefatty.utils.CommonUtils;
@@ -23,6 +25,8 @@ import java.util.*;
 public class NoteKindServiceImpl implements INoteKindService {
     @Autowired
     private TbNoteKindMapper tbNoteKindMapper;
+    @Autowired
+    private TbNoteMapper tbNoteMapper;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -58,7 +62,7 @@ public class NoteKindServiceImpl implements INoteKindService {
     }
 
     @Override
-    public void updateNoteKind(String userId,String noteKindName,String noteKindUrl) {
+    public TbNoteKind addNoteKind(String userId,String noteKindName,String noteKindUrl) {
         TbNoteKind tbNoteKind = new TbNoteKind();
         tbNoteKind.setCreateDate(DateUtils.getCurrentDate());
         tbNoteKind.setCreateTime(DateUtils.getCurrentTime());
@@ -67,5 +71,37 @@ public class NoteKindServiceImpl implements INoteKindService {
         tbNoteKind.setUserId(userId);
         tbNoteKind.setNoteKindId(CommonUtils.getUuid());
         tbNoteKindMapper.insertSelective(tbNoteKind);
+        return tbNoteKind;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public List getAllNoteKindByUserIdWithoutNull(String userId) {
+        List<TbNoteKind> tbNoteKinds = tbNoteKindMapper.selectAscByUserId(userId);
+        List<Map> tnkList = new ArrayList<>();
+        for (TbNoteKind tnk : tbNoteKinds) {
+            Map<String, Object>  temp = new HashMap<>();
+            temp.put("iconUrl", "../../static/bookmark/"+tnk.getKindIconUrl());
+            temp.put("markText", tnk.getNoteKindName());
+            temp.put("id", tnk.getNoteKindId());
+            JSONObject jsonValue = new JSONObject();
+            jsonValue.put("iconUrl","../../static/bookmark/"+tnk.getKindIconUrl());
+            jsonValue.put("markText",tnk.getNoteKindName());
+            jsonValue.put("id", tnk.getNoteKindId());
+            temp.put("value",jsonValue);
+            tnkList.add(temp);
+        }
+        return tnkList;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteNoteKindByNoteKindId(String userId,String noteKindId) {
+        tbNoteKindMapper.deleteByPrimaryKey(noteKindId);
+        //删除分类后，对于所有该分类下的笔记，全部归档为未分类
+        TbNote tbNote = new TbNote();
+        tbNote.setUserId(userId);
+        tbNote.setNoteKindId(noteKindId);
+        tbNoteMapper.updateNoteKindToNullByUserIdAndNoteKindId(tbNote);
     }
 }

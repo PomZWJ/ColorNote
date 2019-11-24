@@ -26,6 +26,7 @@ public enum MessageCode {
     ERROR_FAV_STATE_IS_NULL("000015","收藏状态不能为空"),
     ERROR_NOTE_KIND_NAME_IS_NULL("000016","笔记类型名称不能为空"),
     ERROR_NOTE_KIND_URL_IS_NULL("000017","笔记类型URL不能为空"),
+    ERROR_NOTE_KIND_ID_IS_NULL("000018","笔记类型ID不能为空"),
     ERROR_UNKOWN("999999","未知错误"),
     STARTUP_SUCCESS("000001","启动成功"),
     STARTUP_ERROR("000002","启动失败");

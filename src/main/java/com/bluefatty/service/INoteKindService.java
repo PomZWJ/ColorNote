@@ -12,5 +12,7 @@ import java.util.Map;
  */
 public interface INoteKindService {
     List getAllNoteKindByUserId(String userId);
-    void updateNoteKind(String userId,String noteKindName,String noteKindUrl);
+    TbNoteKind addNoteKind(String userId,String noteKindName,String noteKindUrl);
+    List getAllNoteKindByUserIdWithoutNull(String userId);
+    void deleteNoteKindByNoteKindId(String userId,String noteKindId);
 }

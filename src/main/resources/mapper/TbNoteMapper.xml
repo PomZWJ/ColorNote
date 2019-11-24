@@ -24,7 +24,7 @@
   </sql>
   <select id="statisticsNoNoteKindNumber" parameterType="java.util.Map" resultType="java.lang.Integer">
         select count(note_id)
-        from tb_note where note_kind_id is null
+        from tb_note where note_kind_id is null or note_kind_id = ''
         <if test="noteId != null and noteId != ''">
           and note_id = #{noteId}
         </if>
@@ -298,5 +298,10 @@
       create_time = #{createTime,jdbcType=CHAR},
       create_date = #{createDate,jdbcType=CHAR}
     where note_id = #{noteId,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateNoteKindToNullByUserIdAndNoteKindId" parameterType="com.bluefatty.domain.TbNote">
+    update tb_note set note_kind_id = null
+    where user_id = #{userId,jdbcType=VARCHAR} and note_kind_id = #{noteKindId,jdbcType=VARCHAR}
   </update>
 </mapper>

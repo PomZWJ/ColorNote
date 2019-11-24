@@ -34,7 +34,7 @@ public class NoteKindController {
 
 
     /**
-     * 获取当前用户所有的笔记分类
+     * 获取当前用户所有的笔记分类(包含未分类)
      *
      * @param userId
      * @return
@@ -42,7 +42,7 @@ public class NoteKindController {
     @RequestMapping(value = "/getAllNoteKindByUserId", method = RequestMethod.POST)
     public ResponseParams getAllNoteKindByUserId(String userId) {
         ResponseParams<List> responseParams = new ResponseParams<List>();
-        String desc = "获取用户笔记分类";
+        String desc = "获取用户笔记分类(未包含未分类)";
         log.info("desc = {},userId={}", desc, userId);
         try {
             if (StringUtils.isEmpty(userId)) {
@@ -68,15 +68,49 @@ public class NoteKindController {
     }
 
     /**
-     * 更新笔记分类(包含添加)
+     * 获取当前用户所有的笔记分类(未包含未分类)
      *
      * @param userId
      * @return
      */
-    @RequestMapping(value = "/updateNoteKind", method = RequestMethod.POST)
-    public ResponseParams updateNoteKind(String userId,String noteKindName,String noteKindUrl) {
-        ResponseParams<Boolean> responseParams = new ResponseParams<Boolean>();
-        String desc = "更新笔记分类(包含添加)";
+    @RequestMapping(value = "/getAllNoteKindByUserIdWithoutNull", method = RequestMethod.POST)
+    public ResponseParams getAllNoteKindByUserIdWithoutNull(String userId) {
+        ResponseParams<List> responseParams = new ResponseParams<List>();
+        String desc = "获取用户笔记分类(未包含未分类)";
+        log.info("desc = {},userId={}", desc, userId);
+        try {
+            if (StringUtils.isEmpty(userId)) {
+                throw new ColorNoteException(MessageCode.ERROR_USERID_IS_NULL.getCode(), MessageCode.ERROR_USERID_IS_NULL.getMsg());
+            }
+            List noteKindList = noteKindService.getAllNoteKindByUserIdWithoutNull(userId);
+            responseParams.setParams(noteKindList);
+        } catch (Exception e) {
+            log.error("desc={},获取失败, 原因:{}", desc, e);
+            //清空赋值
+            responseParams.setParams(null);
+            if (e instanceof ColorNoteException) {
+                ColorNoteException ce = (ColorNoteException) e;
+                responseParams.setResultCode(ce.getErrorCode());
+                responseParams.setResultMsg(ce.getErrorMessage());
+            } else {
+                responseParams.setResultCode(MessageCode.ERROR_UNKOWN.getCode());
+                responseParams.setResultMsg(MessageCode.ERROR_UNKOWN.getMsg() + "," + e.getMessage());
+            }
+        }
+        log.info("desc = {} , 出参 = {} ", desc, JSON.toJSONString(responseParams));
+        return responseParams;
+    }
+
+    /**
+     * 添加笔记分类
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/addNoteKind", method = RequestMethod.POST)
+    public ResponseParams addNoteKind(String userId,String noteKindName,String noteKindUrl) {
+        ResponseParams<TbNoteKind> responseParams = new ResponseParams<TbNoteKind>();
+        String desc = "添加笔记分类";
         log.info("desc = {},userId={},noteKindName={},noteKindUrl={}", desc, userId,noteKindName,noteKindUrl);
         try {
             if (StringUtils.isEmpty(userId)) {
@@ -88,10 +122,47 @@ public class NoteKindController {
             if (StringUtils.isEmpty(noteKindUrl)) {
                 throw new ColorNoteException(MessageCode.ERROR_NOTE_KIND_URL_IS_NULL.getCode(), MessageCode.ERROR_NOTE_KIND_URL_IS_NULL.getMsg());
             }
-            noteKindService.updateNoteKind(userId,noteKindName,noteKindUrl);
-            responseParams.setParams(true);
+            TbNoteKind tbNoteKind = noteKindService.addNoteKind(userId, noteKindName, noteKindUrl);
+            responseParams.setParams(tbNoteKind);
         } catch (Exception e) {
             log.error("desc={},获取失败, 原因:{}", desc, e);
+            //清空赋值
+            responseParams.setParams(null);
+            if (e instanceof ColorNoteException) {
+                ColorNoteException ce = (ColorNoteException) e;
+                responseParams.setResultCode(ce.getErrorCode());
+                responseParams.setResultMsg(ce.getErrorMessage());
+            } else {
+                responseParams.setResultCode(MessageCode.ERROR_UNKOWN.getCode());
+                responseParams.setResultMsg(MessageCode.ERROR_UNKOWN.getMsg() + "," + e.getMessage());
+            }
+        }
+        log.info("desc = {} , 出参 = {} ", desc, JSON.toJSONString(responseParams));
+        return responseParams;
+    }
+
+    /**
+     * 根据笔记类型ID删除笔记分类
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/deleteNoteKindByNoteKindId", method = RequestMethod.POST)
+    public ResponseParams deleteNoteKindByNoteKindId(String userId,String noteKindId) {
+        ResponseParams<Boolean> responseParams = new ResponseParams<Boolean>();
+        String desc = "根据笔记类型ID删除笔记分类";
+        log.info("desc = {},userId={},noteKindId={}", desc, userId,noteKindId);
+        try {
+            if (StringUtils.isEmpty(userId)) {
+                throw new ColorNoteException(MessageCode.ERROR_USERID_IS_NULL.getCode(), MessageCode.ERROR_USERID_IS_NULL.getMsg());
+            }
+            if (StringUtils.isEmpty(noteKindId)) {
+                throw new ColorNoteException(MessageCode.ERROR_NOTE_KIND_ID_IS_NULL.getCode(), MessageCode.ERROR_NOTE_KIND_ID_IS_NULL.getMsg());
+            }
+            noteKindService.deleteNoteKindByNoteKindId(userId,noteKindId);
+            responseParams.setParams(true);
+        } catch (Exception e) {
+            log.error("desc={},删除失败, 原因:{}", desc, e);
             //清空赋值
             responseParams.setParams(null);
             if (e instanceof ColorNoteException) {

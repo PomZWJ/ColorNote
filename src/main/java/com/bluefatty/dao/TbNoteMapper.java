@@ -49,4 +49,10 @@ public interface TbNoteMapper {
      * @return
      */
     Integer statisticsNoNoteKindNumber(Map map);
+
+    /**
+     * 根据userId和noteKindId把noteKindId至为空
+     * @param tbNote
+     */
+    void updateNoteKindToNullByUserIdAndNoteKindId(TbNote tbNote);
 }

@@ -104,6 +104,9 @@
       <if test="noteKindId != null and noteKindId != ''">
         and note_kind_id = #{noteKindId}
       </if>
+      <if test="noteKindId != null and noteKindId == ''">
+        and note_kind_id is null or note_kind_id = ''
+      </if>
       <if test="userId != null and userId != ''">
         and user_id = #{userId}
       </if>
@@ -126,7 +129,7 @@
         and create_date = #{createDate}
       </if>
       <if test="noteContent != null and noteContent != ''">
-        and note_content = #{noteContent}
+        and note_content like "%"#{noteContent}"%"
       </if>
     </where>
     order by CONCAT(create_date,create_time) desc
@@ -304,4 +307,7 @@
     update tb_note set note_kind_id = null
     where user_id = #{userId,jdbcType=VARCHAR} and note_kind_id = #{noteKindId,jdbcType=VARCHAR}
   </update>
+
+
+
 </mapper>

@@ -55,4 +55,5 @@ public interface TbNoteMapper {
      * @param tbNote
      */
     void updateNoteKindToNullByUserIdAndNoteKindId(TbNote tbNote);
+
 }

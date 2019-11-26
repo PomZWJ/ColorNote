@@ -15,7 +15,7 @@ public interface INoteService {
      * @param userId
      * @return
      */
-    List getAllNoteInfo(String userId);
+    List getAllNoteInfo(String userId,String noteKindId,String noteContent,String isFav);
 
     void addUserNoteInfo(String userId,String noteKindId,String noteContent,String noteTime);
 
@@ -26,4 +26,5 @@ public interface INoteService {
     void deleteNoteToRubbishByUserIdAndNoteId(String userId, String noteId);
 
     void updateUserNoteInfo(String userId,String noteId,String noteKindId,String noteContent,String noteTime);
+
 }

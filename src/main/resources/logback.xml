@@ -61,7 +61,7 @@
 	<!-- Java基础类日志控制 -->
 	<logger name="java.sql.Connection" level="INFO" />
 	<logger name="java.sql.Statement" level="INFO" />
-	<!--<logger name="com.xmrbi.patrol.daos" level="DEBUG" />-->
+	<logger name="com.bluefatty.dao" level="DEBUG" />
 	<!-- sql语句监控 start -->
 	<!-- httpClient -->
 	<logger name="org.apache.http.wire" level="INFO" />

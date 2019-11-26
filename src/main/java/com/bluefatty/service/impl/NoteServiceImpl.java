@@ -11,6 +11,7 @@ import com.bluefatty.exception.MessageCode;
 import com.bluefatty.service.INoteService;
 import com.bluefatty.utils.CommonUtils;
 import com.bluefatty.utils.DateUtils;
+import com.bluefatty.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,10 +36,18 @@ public class NoteServiceImpl implements INoteService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public List getAllNoteInfo(String userId) {
+    public List getAllNoteInfo(String userId,String noteKindId,String noteContent,String isFav) {
         Map<String,String>dbQueryParams = new HashMap<>();
         dbQueryParams.put("userId",userId);
         dbQueryParams.put("isDelete",NoteStatusFiled.NO_DELETE);
+        if(StringUtils.isEmpty(noteKindId)) {
+            noteKindId = null;
+        }else if(noteKindId.equals("NOT_KIND")){
+            noteKindId = "";
+        }
+        dbQueryParams.put("noteKindId", noteKindId);
+        dbQueryParams.put("noteContent",noteContent);
+        dbQueryParams.put("isFav",isFav);
         List<TbNote> tbNotes = tbNoteMapper.selectBySelective(dbQueryParams);
         return tbNotes;
     }
@@ -134,4 +143,5 @@ public class NoteServiceImpl implements INoteService {
         updateEntity.setNoteTime(noteTime);
         tbNoteMapper.updateByPrimaryKeySelective(updateEntity);
     }
+
 }

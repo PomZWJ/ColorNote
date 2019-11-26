@@ -2,7 +2,6 @@ package com.bluefatty.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.bluefatty.common.ResponseParams;
-import com.bluefatty.constants.FavoriteFiled;
 import com.bluefatty.exception.ColorNoteException;
 import com.bluefatty.exception.MessageCode;
 import com.bluefatty.service.INoteService;
@@ -36,15 +35,15 @@ public class NoteController {
      * @return
      */
     @RequestMapping(value = "/getAllNoteInfo", method = RequestMethod.POST)
-    public ResponseParams getAllNoteInfo(String userId) {
+    public ResponseParams getAllNoteInfo(String userId,String noteKindId,String noteContent,String isFav) {
         ResponseParams<List> responseParams = new ResponseParams<List>();
         String desc = "获取主页所有笔记";
-        log.info("desc = {},userId={}", desc, userId);
+        log.info("desc = {},userId={},noteContent={},noteKindId={},isFav={}", desc, userId,noteContent,noteKindId,isFav);
         try {
             if (StringUtils.isEmpty(userId)) {
                 throw new ColorNoteException(MessageCode.ERROR_USERID_IS_NULL.getCode(), MessageCode.ERROR_USERID_IS_NULL.getMsg());
             }
-            responseParams.setParams(noteService.getAllNoteInfo(userId));
+            responseParams.setParams(noteService.getAllNoteInfo(userId,noteKindId,noteContent,isFav));
         } catch (Exception e) {
             log.error("desc={},获取失败, 原因:{}", desc, e);
             //清空赋值

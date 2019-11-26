@@ -1,6 +1,7 @@
 package com.bluefatty.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.bluefatty.common.ResponseParams;
 import com.bluefatty.dao.TbNoteKindMapper;
 import com.bluefatty.domain.TbNoteKind;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 笔记分类管理
@@ -163,6 +165,44 @@ public class NoteKindController {
             responseParams.setParams(true);
         } catch (Exception e) {
             log.error("desc={},删除失败, 原因:{}", desc, e);
+            //清空赋值
+            responseParams.setParams(null);
+            if (e instanceof ColorNoteException) {
+                ColorNoteException ce = (ColorNoteException) e;
+                responseParams.setResultCode(ce.getErrorCode());
+                responseParams.setResultMsg(ce.getErrorMessage());
+            } else {
+                responseParams.setResultCode(MessageCode.ERROR_UNKOWN.getCode());
+                responseParams.setResultMsg(MessageCode.ERROR_UNKOWN.getMsg() + "," + e.getMessage());
+            }
+        }
+        log.info("desc = {} , 出参 = {} ", desc, JSON.toJSONString(responseParams));
+        return responseParams;
+    }
+
+    /**
+     * 根据笔记类型ID更新笔记分类
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/updateNoteKindByUserId", method = RequestMethod.POST)
+    public ResponseParams updateNoteKindByUserId(String userId,String params) {
+        ResponseParams<Boolean> responseParams = new ResponseParams<Boolean>();
+        String desc = "根据笔记类型ID删除笔记分类";
+        log.info("desc = {},userId={},params={}", desc, userId,JSON.toJSONString(params));
+        try {
+            List<Map<String,String>> listParams = JSON.parseObject(params,new TypeReference<List<Map<String,String>>>(){});
+            if (StringUtils.isEmpty(userId)) {
+                throw new ColorNoteException(MessageCode.ERROR_USERID_IS_NULL.getCode(), MessageCode.ERROR_USERID_IS_NULL.getMsg());
+            }
+            /*if (StringUtils.isEmpty(params)) {
+                throw new ColorNoteException(MessageCode.ERROR_NOTE_KIND_ID_IS_NULL.getCode(), MessageCode.ERROR_NOTE_KIND_ID_IS_NULL.getMsg());
+            }*/
+            noteKindService.updateNoteKindByUserId(listParams);
+            responseParams.setParams(true);
+        } catch (Exception e) {
+            log.error("desc={},更新失败, 原因:{}", desc, e);
             //清空赋值
             responseParams.setParams(null);
             if (e instanceof ColorNoteException) {

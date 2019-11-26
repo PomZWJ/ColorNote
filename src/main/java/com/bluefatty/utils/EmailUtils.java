@@ -22,6 +22,7 @@ public class EmailUtils {
     private JavaMailSender javaMailSender;
 
     public void sendEmail(String to,String code){
+        System.out.println(code);
         SimpleMailMessage smm = new SimpleMailMessage();
         smm.setFrom(from);
         smm.setTo(to);

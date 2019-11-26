@@ -8,6 +8,7 @@ import com.bluefatty.domain.TbNoteKind;
 import com.bluefatty.service.INoteKindService;
 import com.bluefatty.utils.CommonUtils;
 import com.bluefatty.utils.DateUtils;
+import com.bluefatty.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,7 +82,7 @@ public class NoteKindServiceImpl implements INoteKindService {
         List<Map> tnkList = new ArrayList<>();
         for (TbNoteKind tnk : tbNoteKinds) {
             Map<String, Object>  temp = new HashMap<>();
-            temp.put("iconUrl", "../../static/bookmark/"+tnk.getKindIconUrl());
+            temp.put("iconUrl", tnk.getKindIconUrl());
             temp.put("markText", tnk.getNoteKindName());
             temp.put("id", tnk.getNoteKindId());
             JSONObject jsonValue = new JSONObject();
@@ -104,4 +105,28 @@ public class NoteKindServiceImpl implements INoteKindService {
         tbNote.setNoteKindId(noteKindId);
         tbNoteMapper.updateNoteKindToNullByUserIdAndNoteKindId(tbNote);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateNoteKindByUserId(List<Map<String,String>>params) {
+        /*[{
+            "markText": "个人1",
+            "iconUrl": "bookmark-blue.png",
+            "id": "9949bffeea84460d989ce2d2356316e4"
+        }]*/
+        for(int i=0;i<params.size();i++){
+            Map<String,String> map = params.get(i);
+            TbNoteKind tbNoteKind = new TbNoteKind();
+            tbNoteKind.setNoteKindId(map.get("id"));
+            tbNoteKind.setNoteKindName(map.get("markText"));
+            String newIconUrl = map.get("newIconUrl");
+            if(StringUtils.isEmpty(newIconUrl)){
+                tbNoteKind.setKindIconUrl(map.get("iconUrl"));
+            }else{
+                tbNoteKind.setKindIconUrl(newIconUrl);
+            }
+            tbNoteKindMapper.updateByPrimaryKeySelective(tbNoteKind);
+        }
+    }
+
 }

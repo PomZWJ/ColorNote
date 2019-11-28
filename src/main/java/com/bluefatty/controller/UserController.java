@@ -7,6 +7,7 @@ import com.bluefatty.exception.ColorNoteException;
 import com.bluefatty.exception.MessageCode;
 import com.bluefatty.service.IUserService;
 import com.bluefatty.utils.*;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -163,6 +164,55 @@ public class UserController {
             }*/
             Map<String, Object> returnMap = userService.getUserIndexInfo(userId);
             responseParams.setParams(returnMap);
+        } catch (Exception e) {
+            log.error("desc={},获取失败, 原因:{}", desc, e);
+            //清空赋值
+            responseParams.setParams(null);
+            if (e instanceof ColorNoteException) {
+                ColorNoteException ce = (ColorNoteException) e;
+                responseParams.setResultCode(ce.getErrorCode());
+                responseParams.setResultMsg(ce.getErrorMessage());
+            } else {
+                responseParams.setResultCode(MessageCode.ERROR_UNKOWN.getCode());
+                responseParams.setResultMsg(MessageCode.ERROR_UNKOWN.getMsg() + "," + e.getMessage());
+            }
+        }
+        log.info("desc = {} , 出参 = {} ", desc, JSON.toJSONString(responseParams));
+        return responseParams;
+    }
+
+
+
+    /**
+     * 判断用户token是否正确
+     *
+     * @param userId
+     * @param token
+     * @return
+     */
+    @RequestMapping(value = "/determineUserTokenIsCorrect", method = RequestMethod.POST)
+    public ResponseParams determineUserTokenIsCorrect(String userId, String token) {
+        ResponseParams<Boolean> responseParams = new ResponseParams<Boolean>();
+        String desc = "判断用户token是否正确";
+        log.info("desc = {},userId={},token={}", desc, userId, token);
+        try {
+            if (StringUtils.isEmpty(userId)) {
+                responseParams.setParams(false);
+            }
+            if (StringUtils.isEmpty(token)) {
+                responseParams.setParams(false);
+            }
+            if(!StringUtils.isEmpty(userId)&&!StringUtils.isEmpty(token)){
+                try {
+                    responseParams.setParams(userService.determineUserTokenIsCorrect(userId,token));
+                }catch (Exception e){
+                    log.error("对比token失败,e={}",e);
+                    responseParams.setParams(false);
+                }
+
+
+            }
+
         } catch (Exception e) {
             log.error("desc={},获取失败, 原因:{}", desc, e);
             //清空赋值

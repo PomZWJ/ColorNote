@@ -39,4 +39,12 @@ public interface IUserService {
      * @return
      */
     Map getUserIndexInfo(String userId);
+
+    /**
+     * 判断token是否正确
+     * @param userId
+     * @param token
+     * @return
+     */
+    Boolean determineUserTokenIsCorrect(String userId,String token);
 }

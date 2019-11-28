@@ -44,12 +44,14 @@ public class UserServiceImpl implements IUserService {
     private TbNoteKindMapper tbNoteKindMapper;
     @Autowired
     private TbNoteMapper tbNoteMapper;
+    @Autowired
+    private SmsNotificationUtils smsNotificationUtils;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void sendEmailVerificationCode(String userId) {
         String code = PhoneCodeUtils.getVerifyCode();
-        emailUtils.sendEmail(userId, code);
+        smsNotificationUtils.sendMessage(userId, code);
         redisUtils.cacheString(RedisKeyPrefix.VERIFICATION_CODE + userId, Md5Utils.getMd5Str(code), 60, TimeUnit.SECONDS);
     }
 
@@ -183,5 +185,36 @@ public class UserServiceImpl implements IUserService {
         returnMap.put("nearDel", rubbishNoteNum);
         returnMap.put("noNoteKindNumber",noNoteKindNumber);
         return returnMap;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Boolean determineUserTokenIsCorrect(String userId, String token) {
+        try {
+            String desc = "比对用户token是否正确";
+            String cacheString = redisUtils.getCacheString(RedisKeyPrefix.USER_TOKEN + userId);
+            if (StringUtils.isEmpty(cacheString)) {
+                log.error("desc={},userId={},redis中缓存的键无法找到", desc, userId);
+                return false;
+            }
+            if (cacheString.equals(token)) {
+                String tokenStr1 = RsaUtils.rsaPrivateKeyDecrypt(token);
+                String tokenStr2 = RsaUtils.rsaPrivateKeyDecrypt(cacheString);
+                Token token1 = JSON.toJavaObject((JSONObject) JSON.parse(tokenStr1), Token.class);
+                Token token2 = JSON.toJavaObject((JSONObject) JSON.parse(tokenStr2), Token.class);
+
+                if (!token1.getSign().equals(token2.getSign())) {
+                    log.error("desc={},userId={},签名不正确", desc, userId);
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                log.error("desc={},userId={},redis中缓存和传入的token无法匹配", desc, userId);
+                return false;
+            }
+        }catch (Exception e){
+            return false;
+        }
     }
 }

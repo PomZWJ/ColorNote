@@ -20,6 +20,7 @@ import com.bluefatty.service.IUserService;
 import com.bluefatty.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,25 +47,36 @@ public class UserServiceImpl implements IUserService {
     private TbNoteMapper tbNoteMapper;
     @Autowired
     private SmsNotificationUtils smsNotificationUtils;
+    @Value("${vue.static-url}")
+    private String vueStaticUrl;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void sendEmailVerificationCode(String userId) {
         String code = PhoneCodeUtils.getVerifyCode();
+        //System.out.println(code);
         smsNotificationUtils.sendMessage(userId, code);
-        redisUtils.cacheString(RedisKeyPrefix.VERIFICATION_CODE + userId, Md5Utils.getMd5Str(code), 60, TimeUnit.SECONDS);
+        //redisUtils.cacheString(RedisKeyPrefix.VERIFICATION_CODE + userId, Md5Utils.getMd5Str(code), 60, TimeUnit.SECONDS);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, String> userLogin(String userId, String verificationCode) {
         Map<String, String> returnMap = new HashMap<>();
+        if (StringUtils.isEmpty(verificationCode)) {
+            throw new ColorNoteException(MessageCode.ERROR_VERIFICATION_CODE_IS_NULL.getCode(), MessageCode.ERROR_VERIFICATION_CODE_IS_NULL.getMsg());
+        }
         //验证验证码是否通过
-        String userVerificationCode = redisUtils.getCacheString(RedisKeyPrefix.VERIFICATION_CODE + userId);
+        /*String userVerificationCode = redisUtils.getCacheString(RedisKeyPrefix.VERIFICATION_CODE + userId);
         if (StringUtils.isEmpty(userVerificationCode)) {
             throw new ColorNoteException(MessageCode.ERROR_VERIFICATION_CODE_IS_NOT_EXIST.getCode(), MessageCode.ERROR_VERIFICATION_CODE_IS_NOT_EXIST.getMsg());
         }
         if (!Md5Utils.getMd5Str(verificationCode).equals(StringUtils.getValue(userVerificationCode))) {
+            throw new ColorNoteException(MessageCode.ERROR_VERIFICATION_CODE_IS_NOT_OK.getCode(), MessageCode.ERROR_VERIFICATION_CODE_IS_NOT_OK.getMsg());
+        }*/
+        //通过bmob查看验证码是否为空
+        boolean isTrue = smsNotificationUtils.bmobVerifySmsCode(userId,verificationCode);
+        if(!isTrue){
             throw new ColorNoteException(MessageCode.ERROR_VERIFICATION_CODE_IS_NOT_OK.getCode(), MessageCode.ERROR_VERIFICATION_CODE_IS_NOT_OK.getMsg());
         }
         //查询是否已经存在token，如果已存在直接返回，不存在在重新生成
@@ -87,7 +99,7 @@ public class UserServiceImpl implements IUserService {
                 //自动创默认分类
                 List<TbNoteKind> list = new LinkedList<>();
                 String[] name = {"个人", "生活", "工作", "旅游"};
-                String[] iconUrl = {"bookmark-personal.png", "bookmark-life.png", "bookmark-work.png", "bookmark-tourism.png"};
+                String[] iconUrl = {"bookmark-blue.png", "bookmark-green.png", "bookmark-red.png", "bookmark-yellow.png"};
                 Date date = new Date();
                 for (int i = 0; i < name.length; i++) {
                     TbNoteKind tbNoteKind = new TbNoteKind();
@@ -153,7 +165,7 @@ public class UserServiceImpl implements IUserService {
             dbQueryParams.put("isDelete", NoteStatusFiled.NO_DELETE);
             Integer num = tbNoteMapper.statisticsNumberBySelective(dbQueryParams);
             Map<String, Object> temp = new HashMap<>();
-            temp.put("iconUrl", "../../static/bookmark/" + tnk.getKindIconUrl());
+            temp.put("iconUrl", vueStaticUrl + tnk.getKindIconUrl());
             temp.put("markText", tnk.getNoteKindName());
             temp.put("id", tnk.getNoteKindId());
             temp.put("markNum", num);

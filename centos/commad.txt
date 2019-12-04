@@ -1,0 +1,9 @@
+#结束进程
+
+##查找进程
+ps -ef|grep ColorNote
+##杀死进程
+kill -9 pid
+
+#后台运行
+nohup ./start-colornote.sh &

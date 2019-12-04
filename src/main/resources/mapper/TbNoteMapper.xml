@@ -24,7 +24,7 @@
   </sql>
   <select id="statisticsNoNoteKindNumber" parameterType="java.util.Map" resultType="java.lang.Integer">
         select count(note_id)
-        from tb_note where note_kind_id is null or note_kind_id = ''
+        from tb_note where (note_kind_id is null or note_kind_id = '')
         <if test="noteId != null and noteId != ''">
           and note_id = #{noteId}
         </if>

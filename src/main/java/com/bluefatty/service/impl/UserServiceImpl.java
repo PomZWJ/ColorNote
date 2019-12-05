@@ -49,14 +49,23 @@ public class UserServiceImpl implements IUserService {
     private SmsNotificationUtils smsNotificationUtils;
     @Value("${vue.static-url}")
     private String vueStaticUrl;
+    @Value("${verificationCode.method}")
+    private String verificationCodeMethod;
+    @Value("${verificationCode.ttl}")
+    private Integer verificationCodeTTL;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void sendEmailVerificationCode(String userId) {
         String code = PhoneCodeUtils.getVerifyCode();
-        //System.out.println(code);
-        smsNotificationUtils.sendMessage(userId, code);
-        //redisUtils.cacheString(RedisKeyPrefix.VERIFICATION_CODE + userId, Md5Utils.getMd5Str(code), 60, TimeUnit.SECONDS);
+        if(verificationCodeMethod.trim().equals("system")){
+            System.out.println(code);
+            redisUtils.cacheString(RedisKeyPrefix.VERIFICATION_CODE + userId, Md5Utils.getMd5Str(code), verificationCodeTTL, TimeUnit.MINUTES);
+        }else if(verificationCodeMethod.trim().equals("bmob")){
+            smsNotificationUtils.sendMessage(userId, code);
+        }else{
+            throw new ColorNoteException(MessageCode.ERROR_VERIFICATION_CODE_METHOD_IS_NOT_SUPPORT.getCode(), MessageCode.ERROR_VERIFICATION_CODE_METHOD_IS_NOT_SUPPORT.getMsg());
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -67,17 +76,23 @@ public class UserServiceImpl implements IUserService {
             throw new ColorNoteException(MessageCode.ERROR_VERIFICATION_CODE_IS_NULL.getCode(), MessageCode.ERROR_VERIFICATION_CODE_IS_NULL.getMsg());
         }
         //验证验证码是否通过
-        /*String userVerificationCode = redisUtils.getCacheString(RedisKeyPrefix.VERIFICATION_CODE + userId);
-        if (StringUtils.isEmpty(userVerificationCode)) {
-            throw new ColorNoteException(MessageCode.ERROR_VERIFICATION_CODE_IS_NOT_EXIST.getCode(), MessageCode.ERROR_VERIFICATION_CODE_IS_NOT_EXIST.getMsg());
-        }
-        if (!Md5Utils.getMd5Str(verificationCode).equals(StringUtils.getValue(userVerificationCode))) {
-            throw new ColorNoteException(MessageCode.ERROR_VERIFICATION_CODE_IS_NOT_OK.getCode(), MessageCode.ERROR_VERIFICATION_CODE_IS_NOT_OK.getMsg());
-        }*/
-        //通过bmob查看验证码是否为空
-        boolean isTrue = smsNotificationUtils.bmobVerifySmsCode(userId,verificationCode);
-        if(!isTrue){
-            throw new ColorNoteException(MessageCode.ERROR_VERIFICATION_CODE_IS_NOT_OK.getCode(), MessageCode.ERROR_VERIFICATION_CODE_IS_NOT_OK.getMsg());
+        if(verificationCodeMethod.trim().equals("system")){
+            //系统直接输出验证码验证
+            String userVerificationCode = redisUtils.getCacheString(RedisKeyPrefix.VERIFICATION_CODE + userId);
+            if (StringUtils.isEmpty(userVerificationCode)) {
+                throw new ColorNoteException(MessageCode.ERROR_VERIFICATION_CODE_IS_NOT_EXIST.getCode(), MessageCode.ERROR_VERIFICATION_CODE_IS_NOT_EXIST.getMsg());
+            }
+            if (!Md5Utils.getMd5Str(verificationCode).equals(StringUtils.getValue(userVerificationCode))) {
+                throw new ColorNoteException(MessageCode.ERROR_VERIFICATION_CODE_IS_NOT_OK.getCode(), MessageCode.ERROR_VERIFICATION_CODE_IS_NOT_OK.getMsg());
+            }
+        }else if(verificationCodeMethod.trim().equals("bmob")){
+            //通过bmob查看验证码是否为空
+            boolean isTrue = smsNotificationUtils.bmobVerifySmsCode(userId,verificationCode);
+            if(!isTrue){
+                throw new ColorNoteException(MessageCode.ERROR_VERIFICATION_CODE_IS_NOT_OK.getCode(), MessageCode.ERROR_VERIFICATION_CODE_IS_NOT_OK.getMsg());
+            }
+        }else{
+            throw new ColorNoteException(MessageCode.ERROR_VERIFICATION_CODE_METHOD_IS_NOT_SUPPORT.getCode(), MessageCode.ERROR_VERIFICATION_CODE_METHOD_IS_NOT_SUPPORT.getMsg());
         }
         //查询是否已经存在token，如果已存在直接返回，不存在在重新生成
         String existToken = redisUtils.getCacheString(RedisKeyPrefix.USER_TOKEN + userId);
@@ -165,7 +180,7 @@ public class UserServiceImpl implements IUserService {
             dbQueryParams.put("isDelete", NoteStatusFiled.NO_DELETE);
             Integer num = tbNoteMapper.statisticsNumberBySelective(dbQueryParams);
             Map<String, Object> temp = new HashMap<>();
-            temp.put("iconUrl", vueStaticUrl + tnk.getKindIconUrl());
+            temp.put("iconUrl", vueStaticUrl +"/bookmark/"+ tnk.getKindIconUrl());
             temp.put("markText", tnk.getNoteKindName());
             temp.put("id", tnk.getNoteKindId());
             temp.put("markNum", num);

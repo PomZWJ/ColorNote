@@ -11,6 +11,7 @@ import com.bluefatty.utils.DateUtils;
 import com.bluefatty.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +29,8 @@ public class NoteKindServiceImpl implements INoteKindService {
     private TbNoteKindMapper tbNoteKindMapper;
     @Autowired
     private TbNoteMapper tbNoteMapper;
-
+    @Value("${vue.static-url}")
+    private String vueStaticUrl;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -38,22 +40,22 @@ public class NoteKindServiceImpl implements INoteKindService {
         Map<String, Object> temp = null;
         JSONObject jsonValue = null;
         temp =  new HashMap<>();
-        temp.put("iconUrl", "../../static/bookmark/bookmark-black.png");
+        temp.put("iconUrl", vueStaticUrl+"/bookmark/bookmark-black.png");
         temp.put("markText", "未分类");
         temp.put("id", "");
         jsonValue = new JSONObject();
-        jsonValue.put("iconUrl","../../static/bookmark/bookmark-black.png");
+        jsonValue.put("iconUrl",vueStaticUrl+"/bookmark/bookmark-black.png");
         jsonValue.put("markText","未分类");
         jsonValue.put("id", "");
         temp.put("value",jsonValue);
         tnkList.add(temp);
         for (TbNoteKind tnk : tbNoteKinds) {
             temp = new HashMap<>();
-            temp.put("iconUrl", "../../static/bookmark/"+tnk.getKindIconUrl());
+            temp.put("iconUrl", vueStaticUrl+"/bookmark/"+tnk.getKindIconUrl());
             temp.put("markText", tnk.getNoteKindName());
             temp.put("id", tnk.getNoteKindId());
             jsonValue = new JSONObject();
-            jsonValue.put("iconUrl","../../static/bookmark/"+tnk.getKindIconUrl());
+            jsonValue.put("iconUrl",vueStaticUrl+"/bookmark/"+tnk.getKindIconUrl());
             jsonValue.put("markText",tnk.getNoteKindName());
             jsonValue.put("id", tnk.getNoteKindId());
             temp.put("value",jsonValue);
@@ -85,11 +87,11 @@ public class NoteKindServiceImpl implements INoteKindService {
             temp.put("iconUrl", tnk.getKindIconUrl());
             temp.put("markText", tnk.getNoteKindName());
             temp.put("id", tnk.getNoteKindId());
-            JSONObject jsonValue = new JSONObject();
+            /*JSONObject jsonValue = new JSONObject();
             jsonValue.put("iconUrl","../../static/bookmark/"+tnk.getKindIconUrl());
             jsonValue.put("markText",tnk.getNoteKindName());
             jsonValue.put("id", tnk.getNoteKindId());
-            temp.put("value",jsonValue);
+            temp.put("value",jsonValue);*/
             tnkList.add(temp);
         }
         return tnkList;

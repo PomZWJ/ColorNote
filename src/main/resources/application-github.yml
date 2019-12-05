@@ -57,4 +57,12 @@ bmob:
   verificationTemplate: 彩色笔记
 
 vue:
-  static-url: ../../static/bookmark/
+  static-url: ../../static/
+
+verificationCode:
+  #system为直接控制台输出验证码，缓存至redis
+  #bmob为bomob发出的验证码，bmob缓存在自己的缓存池中，不需要我们缓存，直接验证即可
+  method: system
+  #过期时间(单位:分钟)
+  ttl: 1
+

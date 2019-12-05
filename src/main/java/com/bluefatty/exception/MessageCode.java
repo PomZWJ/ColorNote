@@ -27,6 +27,7 @@ public enum MessageCode {
     ERROR_NOTE_KIND_NAME_IS_NULL("000016","笔记类型名称不能为空"),
     ERROR_NOTE_KIND_URL_IS_NULL("000017","笔记类型URL不能为空"),
     ERROR_NOTE_KIND_ID_IS_NULL("000018","笔记类型ID不能为空"),
+    ERROR_VERIFICATION_CODE_METHOD_IS_NOT_SUPPORT("000019","发送验证码方式与配置的不统一"),
     ERROR_UNKOWN("999999","未知错误"),
     STARTUP_SUCCESS("000001","启动成功"),
     STARTUP_ERROR("000002","启动失败");

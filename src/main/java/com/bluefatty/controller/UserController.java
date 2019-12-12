@@ -229,4 +229,35 @@ public class UserController {
         log.info("desc = {} , 出参 = {} ", desc, JSON.toJSONString(responseParams));
         return responseParams;
     }
+
+
+    /**
+     * 体验用户登录，如果数据库中没有用户记录，则自动开户
+     *
+     * @return
+     */
+    @RequestMapping(value = "/tryAccountLogin", method = RequestMethod.POST)
+    public ResponseParams tryAccountLogin() {
+        ResponseParams<Map> responseParams = new ResponseParams<Map>();
+        String desc = "体验账户用户登录";
+        log.info("desc = {} ");
+        try {
+            Map<String, String> map = userService.tryUserLogin();
+            responseParams.setParams(map);
+        } catch (Exception e) {
+            log.error("desc={},登录失败, 原因:{}", desc, e);
+            //清空赋值
+            responseParams.setParams(null);
+            if (e instanceof ColorNoteException) {
+                ColorNoteException ce = (ColorNoteException) e;
+                responseParams.setResultCode(ce.getErrorCode());
+                responseParams.setResultMsg(ce.getErrorMessage());
+            } else {
+                responseParams.setResultCode(MessageCode.ERROR_UNKOWN.getCode());
+                responseParams.setResultMsg(MessageCode.ERROR_UNKOWN.getMsg() + "," + e.getMessage());
+            }
+        }
+        log.info("desc = {} , 出参 = {} ", desc, JSON.toJSONString(responseParams));
+        return responseParams;
+    }
 }

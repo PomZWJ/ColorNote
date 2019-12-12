@@ -47,4 +47,10 @@ public interface IUserService {
      * @return
      */
     Boolean determineUserTokenIsCorrect(String userId,String token);
+
+    /**
+     * 体验用户登录--如果用户不存在，则自动创建
+     * @return
+     */
+    Map<String,String> tryUserLogin();
 }

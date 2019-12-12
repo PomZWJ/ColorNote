@@ -244,4 +244,58 @@ public class UserServiceImpl implements IUserService {
             return false;
         }
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Map<String, String> tryUserLogin() {
+        String userId = "guest";
+        Map<String, String> returnMap = new HashMap<>();
+        //查询是否已经存在token，如果已存在直接返回，不存在在重新生成
+        String existToken = redisUtils.getCacheString(RedisKeyPrefix.USER_TOKEN + userId);
+        if (!StringUtils.isEmpty(existToken)) {
+            returnMap.put("userId", userId);
+            returnMap.put("token", existToken);
+        } else {
+            TbUser tbUser = tbUserMapper.selectByPrimaryKey(userId);
+            if (tbUser == null) {
+                log.info("用户ID={}不存在，自动开户", userId);
+                //自动建立账户
+                tbUser = new TbUser();
+                tbUser.setAccountStatus(AccountStatusFiled.NORMAL);
+                tbUser.setCreateDate(DateUtils.getCurrentDate());
+                tbUser.setCreateTime(DateUtils.getCurrentTime());
+                tbUser.setUserId(userId);
+                tbUser.setUserName("cn_" + userId);
+                tbUserMapper.insert(tbUser);
+                //自动创默认分类
+                List<TbNoteKind> list = new LinkedList<>();
+                String[] name = {"个人", "生活", "工作", "旅游"};
+                String[] iconUrl = {"bookmark-blue.png", "bookmark-green.png", "bookmark-red.png", "bookmark-yellow.png"};
+                Date date = new Date();
+                for (int i = 0; i < name.length; i++) {
+                    TbNoteKind tbNoteKind = new TbNoteKind();
+                    tbNoteKind.setNoteKindName(name[i]);
+                    tbNoteKind.setNoteKindId(CommonUtils.getUuid());
+                    tbNoteKind.setUserId(userId);
+                    tbNoteKind.setCreateDate(DateUtils.getCurrentDate());
+                    /*靠下一秒区分时间，好排序*/
+                    date.setTime(date.getTime() + 1000);
+                    tbNoteKind.setCreateTime(DateUtils.getTimeByDate(date));
+                    tbNoteKind.setKindIconUrl(iconUrl[i]);
+                    list.add(tbNoteKind);
+                }
+                tbNoteKindMapper.batchInsert(list);
+            }
+            Token token = new Token();
+            token.setCreateDate(DateUtils.getCurrentDate());
+            token.setCreateTime(DateUtils.getCurrentTime());
+            token.setUser(tbUser);
+            token.setSign(Md5Utils.getMd5Str(JSON.toJSONString(tbUser)));
+            String tokenStr = RsaUtils.rsaPublicEncrypt(JSON.toJSONString(token));
+            redisUtils.cacheString(RedisKeyPrefix.USER_TOKEN + userId, tokenStr, 72, TimeUnit.HOURS);
+            returnMap.put("userId", userId);
+            returnMap.put("token", tokenStr);
+        }
+        return returnMap;
+    }
 }

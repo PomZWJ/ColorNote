@@ -57,7 +57,7 @@ bmob:
   verificationTemplate: 彩色笔记
 
 vue:
-  static-url: ../../static/
+  static-url: ../../color-note/static/
 
 verificationCode:
   #system为直接控制台输出验证码，缓存至redis

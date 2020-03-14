@@ -194,6 +194,7 @@ public class UserServiceImpl implements IUserService {
         Integer favNoteNum = tbNoteMapper.statisticsNumberBySelective(dbQueryParams);
         //回收站
         dbQueryParams.clear();
+        dbQueryParams.put("userId",userId);
         dbQueryParams.put("isDelete", NoteStatusFiled.RUBBISH);
         Integer rubbishNoteNum = tbNoteMapper.statisticsNumberBySelective(dbQueryParams);
 

@@ -105,7 +105,7 @@
         and note_kind_id = #{noteKindId}
       </if>
       <if test="noteKindId != null and noteKindId == ''">
-        and note_kind_id is null or note_kind_id = ''
+        and (note_kind_id is null or note_kind_id = '')
       </if>
       <if test="userId != null and userId != ''">
         and user_id = #{userId}

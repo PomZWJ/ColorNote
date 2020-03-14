@@ -122,7 +122,7 @@ public class NoteServiceImpl implements INoteService {
         TbNote updateEntity = new TbNote();
         updateEntity.setNoteId(noteId);
         updateEntity.setIsDelete(NoteStatusFiled.RUBBISH);
-        updateEntity.setDeleteDate(DateUtils.getCurrentDate());
+        updateEntity.setDeleteDate(DateUtils.getCurrentDate("yyyy-MM-dd HH:mm"));
         tbNoteMapper.updateByPrimaryKeySelective(updateEntity);
     }
 
@@ -141,6 +141,23 @@ public class NoteServiceImpl implements INoteService {
         updateEntity.setNoteKindId(noteKindId);
         updateEntity.setNoteContent(noteContent);
         updateEntity.setNoteTime(noteTime);
+        tbNoteMapper.updateByPrimaryKeySelective(updateEntity);
+    }
+
+    @Override
+    public List getDeletedItemNote(String userId) {
+        Map<String,String>dbQueryParams = new HashMap<>();
+        dbQueryParams.put("userId",userId);
+        dbQueryParams.put("isDelete",NoteStatusFiled.RUBBISH);
+        List<TbNote> tbNotes = tbNoteMapper.selectBySelective(dbQueryParams);
+        return tbNotes;
+    }
+
+    @Override
+    public void goBackFromTrashCan(String noteId) {
+        TbNote updateEntity = new TbNote();
+        updateEntity.setNoteId(noteId);
+        updateEntity.setIsDelete(NoteStatusFiled.NO_DELETE);
         tbNoteMapper.updateByPrimaryKeySelective(updateEntity);
     }
 

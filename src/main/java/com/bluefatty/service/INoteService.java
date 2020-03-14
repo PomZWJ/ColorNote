@@ -27,4 +27,8 @@ public interface INoteService {
 
     void updateUserNoteInfo(String userId,String noteId,String noteKindId,String noteContent,String noteTime);
 
+    List getDeletedItemNote(String userId);
+
+    void goBackFromTrashCan(String noteId);
+
 }

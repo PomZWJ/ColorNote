@@ -258,4 +258,38 @@ public class NoteController {
         log.info("desc = {} , 出参 = {} ", desc, JSON.toJSONString(responseParams));
         return responseParams;
     }
+    @RequestMapping(value = "/getDeletedItemNote", method = RequestMethod.POST)
+    public ResponseParams getDeletedItemNote(String userId) {
+        ResponseParams<List> responseParams = new ResponseParams<List>();
+        String desc = "得到最近删除的笔记";
+        log.info("desc = {},userId={}", desc, userId);
+        try{
+            if (StringUtils.isEmpty(userId)) {
+                throw new ColorNoteException(MessageCode.ERROR_USERID_IS_NULL.getCode(), MessageCode.ERROR_USERID_IS_NULL.getMsg());
+            }
+            List noteLists = noteService.getDeletedItemNote(userId);
+            responseParams.setParams(noteLists);
+        }catch (Exception e){
+
+        }
+        log.info("desc = {} , 出参 = {} ", desc, JSON.toJSONString(responseParams));
+        return responseParams;
+    }
+    @RequestMapping(value = "/goBackFromTrashCan", method = RequestMethod.POST)
+    public ResponseParams goBackFromTrashCan(String noteId){
+        ResponseParams<Boolean> responseParams = new ResponseParams<Boolean>();
+        String desc = "恢复删除的笔记";
+        log.info("desc = {},noteId={}", desc, noteId);
+        try{
+            if (StringUtils.isEmpty(noteId)) {
+                throw new ColorNoteException(MessageCode.ERROR_NOTE_ID_IS_NULL.getCode(), MessageCode.ERROR_NOTE_ID_IS_NULL.getMsg());
+            }
+            noteService.goBackFromTrashCan(noteId);
+            responseParams.setParams(true);
+        }catch (Exception e){
+
+        }
+        log.info("desc = {} , 出参 = {} ", desc, JSON.toJSONString(responseParams));
+        return responseParams;
+    }
 }
